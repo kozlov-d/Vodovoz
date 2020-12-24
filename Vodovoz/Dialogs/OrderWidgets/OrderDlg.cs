@@ -104,6 +104,7 @@ namespace Vodovoz
 		private IOrganizationProvider organizationProvider;
 		private ICounterpartyContractRepository counterpartyContractRepository;
 		private CounterpartyContractFactory counterpartyContractFactory;
+		private Nomenclature vodovozCatalog;
 		
 		private readonly IEmployeeService employeeService = VodovozGtkServicesConfig.EmployeeService;
 		private readonly IUserRepository userRepository = UserSingletonRepository.GetInstance();
@@ -584,6 +585,19 @@ namespace Vodovoz
 					CurrentObjectChanged?.Invoke(this, new CurrentObjectChangedArgs(Entity.Contract));
 				} 
 			};
+		}
+
+		private void TryAddVodovozCatalog(INomenclatureParametersProvider nomenclatureParametersProvider)
+		{
+			if (vodovozCatalog == null) {
+				vodovozCatalog = UoW.GetById<Nomenclature>(nomenclatureParametersProvider.VodovozCatalogId);
+			}
+			
+			if (!orderRepository.CanAddVodovozCatalogToOrder(UoW, vodovozCatalog.Id)) {
+				return;
+			}
+
+			Entity.AddVodovozCatalogNomenclature(vodovozCatalog);
 		}
 
 		private void OnDeliveryPointChanged(EntityChangeEvent[] changeevents)
@@ -1798,6 +1812,7 @@ namespace Vodovoz
 
 				enumTax.SelectedItem = Entity.Client.TaxType;
 				enumTax.Visible = lblTax.Visible = IsEnumTaxVisible();
+				TryAddVodovozCatalog(new NomenclatureParametersProvider());
 			} else {
 				referenceDeliveryPoint.Sensitive = false;
 			}
