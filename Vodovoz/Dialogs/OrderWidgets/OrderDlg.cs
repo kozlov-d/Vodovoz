@@ -392,7 +392,7 @@ namespace Vodovoz
 			Entity.ObservableOrderEquipments.ElementRemoved += ObservableOrderEquipmentsOnElementRemoved;
 
 			enumSignatureType.ItemsEnum = typeof(OrderSignatureType);
-			if (!Entity.IsForRetail)
+			if (!Entity.IsForRetail && Entity.SignatureType != OrderSignatureType.SignatureTranscript)
             {
 				enumSignatureType.AddEnumToHideList(new object[] { OrderSignatureType.SignatureTranscript });
             }
