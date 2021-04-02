@@ -1323,7 +1323,7 @@ WHERE
             SELECT online_order
             FROM orders
             WHERE online_order IS NOT NULL 
-                AND delivery_date BETWEEN @startDate AND @endDate
+                AND delivery_date &gt;= @startDate
         )
         AND payment_by_card_from != 'FromSMS'
     )
@@ -1333,7 +1333,7 @@ WHERE
             SELECT id
             FROM orders
             WHERE online_order IS NOT NULL
-                AND delivery_date BETWEEN @startDate AND @endDate
+                AND delivery_date &gt;= @startDate
         )
         AND payment_by_card_from = 'FromSMS'
     )
